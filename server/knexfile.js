@@ -1,51 +1,38 @@
-// Update with your config settings.
-const dbConnection = process.env.DATABASE_URL;
+const localPg = {
+  host: "localhost",
+  database: "lambda",
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS
+};
+const dbConnection = process.env.DATABASE_URL || localPg;
 
 module.exports = {
-	auth: {
-		client: 'sqlite3',
-    	connection: {
-      		filename: './auth/db.sqlite3'
-    	},
-    	useNullAsDefault: true,
-    	migrations: {
-      		directory: './auth/migrations'
-    	},
-    	seeds: {
-      		directory: './auth/seeds'
-    	}
-	},
-	development: {
-		client: 'mssql',
-		connection: {
-			host: 'localhost\\SQLEXPRESS',
-			user: 'sa',
-			password: 'admin',
-			database: 'diydb',
-			options: {
-				port: 1433,
-				encrypt: true
-			}
-		},
-		useNullAsDefault: true,
-		migrations: {
-			directory: './migrations',
-			tableName: 'migrations'
-		},
-		seeds: { directory: './seeds' }
-	},
-
-	production: {
-		client: 'mssql',
-		connection: dbConnection,
-		pool: {
-			min: 2,
-			max: 10
-		},
-		migrations: {
-			directory: './migrations',
-			tableName: 'migrations'
-		},
-		seeds: { directory: './seeds' }
-	}
+  development: {
+    client: "sqlite3",
+    connection: {
+      filename: "./data/db.db3"
+    },
+    useNullAsDefault: true,
+    migrations: {
+      directory: "./data/migrations"
+    },
+    seeds: {
+      directory: "./data/seeds"
+    }
+  },
+  production: {
+    client: "pg",
+    connection: dbConnection,
+    pool: {
+      min: 2,
+      max: 10
+    },
+    migrations: {
+      tableName: "knex_migrations",
+      directory: "./data/migrations"
+    },
+    seeds: {
+      directory: "./data/seeds"
+    }
+  }
 };
